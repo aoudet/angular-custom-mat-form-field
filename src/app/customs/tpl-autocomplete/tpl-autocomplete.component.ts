@@ -90,12 +90,14 @@ export class TplAutocompleteComponent
 
   @Input()
   get value(): any | null {
+    console.log(`value (get) from ctr id ${this.id}`, this.myControl.value);
     if (this.myControl.valid) {
       return this.myControl.value;
     }
     return null;
   }
   set value(value: any | null) {
+    console.log(`value (set) from ctr id ${this.id}`, value);
     this.myControl.setValue(value);
     this.stateChanges.next();
   }
@@ -119,6 +121,7 @@ export class TplAutocompleteComponent
   onTouched = () => {};
 
   writeValue(obj: any): void {
+    console.log(`writeValue from ctr id ${this.id}`, obj);
     this.value = obj;
   }
   registerOnChange(fn: any): void {
@@ -149,7 +152,6 @@ export class TplAutocompleteComponent
   filteredOptions: Observable<string[]>;
 
   ngOnInit() {
-
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
