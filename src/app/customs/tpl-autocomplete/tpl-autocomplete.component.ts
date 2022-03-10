@@ -44,7 +44,7 @@ export class TplAutocompleteComponent<T>
   myControl = new FormControl();
   currentObject: T;
 
-  options: T[] = [];
+  options: any[] = [];
   //   new T(1, 'One', 'un'),
   //   new T(2, 'Two', 'deux'),
   //   new T(3, 'Three', 'trois'),
