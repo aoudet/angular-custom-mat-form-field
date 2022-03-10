@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MyTel } from './customs/models/my-tel';
+import { User } from './customs/models/user';
 
 /** @title Form field with custom telephone number input control. */
 @Component({
@@ -13,6 +14,12 @@ export class FormFieldCustomControlExample {
     name: new FormControl(''),
     title: new FormControl(''),
   });
+
+  options = [
+    new User(1, 'One', 'un'),
+    new User(2, 'Two', 'deux'),
+    new User(3, 'Three', 'trois'),
+  ];
 }
 
 /**  Copyright 2022 Google LLC. All Rights Reserved.

@@ -12,7 +12,7 @@ export class UsersDirective {
     new User(3, 'Three', 'trois'),
   ];
 
-  constructor(private host: TplAutocompleteComponent) {
+  constructor(private host: TplAutocompleteComponent<User>) {
     this.host._filter = (value: string): User[] => {
       return this.options.filter((option) =>
         (<any>option)[this.host.filterField]
