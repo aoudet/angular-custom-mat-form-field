@@ -33,7 +33,8 @@ import { MyTel } from '../models/my-tel';
   styleUrls: ['./tel-input.component.scss'],
   providers: [
     { provide: MatFormFieldControl, useExisting: TelInputComponent },
-    { provide: NG_VALUE_ACCESSOR, multi: true, useExisting: TelInputComponent },
+    // circular dependencies on DI if here
+    // { provide: NG_VALUE_ACCESSOR, multi: true, useExisting: TelInputComponent },
   ],
   host: {
     '[class.example-floating]': 'shouldLabelFloat',
