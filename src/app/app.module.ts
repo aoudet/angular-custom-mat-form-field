@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MainComponent } from './main.component';
 import { TelInputComponent } from './customs/tel-input/tel-input.component';
 import { TplAutocompleteComponent } from './customs/tpl-autocomplete/tpl-autocomplete.component';
+import { UsersDirective } from './customs/tpl-autocomplete/directives/users.directive';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { TplAutocompleteComponent } from './customs/tpl-autocomplete/tpl-autocom
     TelInputComponent,
     MainComponent,
     TplAutocompleteComponent,
+    UsersDirective,
   ],
   imports: [
     BrowserAnimationsModule,

@@ -23,7 +23,7 @@ import {
   MAT_FORM_FIELD,
 } from '@angular/material/form-field';
 import { map, Observable, startWith, Subject } from 'rxjs';
-import { User } from '../models/user';
+import { T } from '../models/user';
 
 @Component({
   selector: 'app-tpl-autocomplete',
@@ -37,21 +37,21 @@ import { User } from '../models/user';
   },
 })
 export class TplAutocompleteComponent
-  implements MatFormFieldControl<User>, ControlValueAccessor, OnInit
+  implements MatFormFieldControl<T>, ControlValueAccessor, OnInit
 {
   static nextId = 0;
   @ViewChild('autoInput') autoInput: HTMLInputElement;
 
   myControl = new FormControl();
-  currentObject: User;
+  currentObject: T;
 
-  options: User[] = [
-    new User(1, 'One', 'un'),
-    new User(2, 'Two', 'deux'),
-    new User(3, 'Three', 'trois'),
-  ];
+  options: T[] = [];
+  //   new T(1, 'One', 'un'),
+  //   new T(2, 'Two', 'deux'),
+  //   new T(3, 'Three', 'trois'),
+  // ];
 
-  filteredOptions: Observable<User[]>;
+  filteredOptions: Observable<T[]>;
 
   //MatFormFieldControl implementation properties
   stateChanges = new Subject<void>();
@@ -109,7 +109,7 @@ export class TplAutocompleteComponent
   private _disabled = false;
 
   @Input()
-  get value(): User | null {
+  get value(): T | null {
     console.log(`value (get) from ctr id ${this.id}`, this.myControl.value);
     if (this.myControl.valid) {
       (<any>this.currentObject)[this.filterField] = this.myControl.value;
@@ -117,7 +117,7 @@ export class TplAutocompleteComponent
     }
     return null;
   }
-  set value(value: User | null) {
+  set value(value: T | null) {
     console.log(`value (set) from ctr id ${this.id}`, value);
     this.myControl.setValue(value);
     this.stateChanges.next();
@@ -137,6 +137,12 @@ export class TplAutocompleteComponent
   ngOnInit() {
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
+      map(
+        (value: string | T): string =>
+          (typeof value === 'string'
+            ? value
+            : (<any>value)[this.filterField]) || ''
+      ),
       map((value) => this._filter(value))
     );
   }
@@ -149,7 +155,7 @@ export class TplAutocompleteComponent
    * writeValue: method called by the Forms module to write a value into a form control...
    * So this means write From Higher order FormGroup...
    */
-  writeValue(obj: User): void {
+  writeValue(obj: T): void {
     console.log(`writeValue from ctr id ${this.id}`, obj);
     this.currentObject = obj;
     this.myControl.setValue((<any>this.currentObject)[this.filterField]);
@@ -194,7 +200,7 @@ export class TplAutocompleteComponent
     this.onChange(value);
   }
 
-  displayFn(user?: User): string {
+  displayFn(user?: T): string {
     console.log(`user display fn is with user input`, user);
     return (user && (<any>user)[this.filterField]) || '';
   }
@@ -212,17 +218,17 @@ export class TplAutocompleteComponent
     this._focusMonitor.stopMonitoring(this._elementRef);
   }
 
-  _filter(value: string | User): User[] {
-    const filterStr =
-      (typeof value === 'string' ? value : (<any>value)[this.filterField]) ||
-      '';
+  _filter(value: string): T[] {
+    // const filterStr =
+    //   (typeof value === 'string' ? value : (<any>value)[this.filterField]) ||
+    //   '';
     // cast to any to make sure string type wont be a pb while only User's prop works...
     // aka filterField = test === true ? 'name' : 'title' : works bc both name and title are properties of User
 
     return this.options.filter((option) =>
       (<any>option)[this.filterField]
         .toLowerCase()
-        .includes(filterStr.toLowerCase())
+        .includes(value.toLowerCase())
     );
   }
 
