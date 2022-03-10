@@ -1,19 +1,19 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-tpl-autocomplete',
   templateUrl: './tpl-autocomplete.component.html',
-  styles: ['./tpl-autocomplete.component.scss'],
+  styleUrls: ['./tpl-autocomplete.component.scss'],
   providers: [
     { provide: MatFormFieldControl, useExisting: TplAutocompleteComponent },
   ],
 })
 export class TplAutocompleteComponent implements MatFormFieldControl<any> {
   value: any;
-  stateChanges: Observable<void>;
+  stateChanges = new Subject<void>();
   id: string;
   placeholder: string;
   ngControl: NgControl | null;
