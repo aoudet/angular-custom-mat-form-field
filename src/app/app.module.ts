@@ -15,7 +15,6 @@ import { TplAutocompleteComponent } from './customs/tpl-autocomplete/tpl-autocom
   declarations: [
     FormFieldCustomControlExample,
     TelInputComponent,
-    TplAutocompleteComponent,
     MainComponent,
     TplAutocompleteComponent,
   ],
