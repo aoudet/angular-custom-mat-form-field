@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
-import { NgControl } from '@angular/forms';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { Observable, Subject } from 'rxjs';
 
@@ -11,7 +11,9 @@ import { Observable, Subject } from 'rxjs';
     { provide: MatFormFieldControl, useExisting: TplAutocompleteComponent },
   ],
 })
-export class TplAutocompleteComponent implements MatFormFieldControl<any> {
+export class TplAutocompleteComponent
+  implements MatFormFieldControl<any>, ControlValueAccessor
+{
   value: any;
   stateChanges = new Subject<void>();
   id: string;
@@ -28,6 +30,20 @@ export class TplAutocompleteComponent implements MatFormFieldControl<any> {
   userAriaDescribedBy?: string | undefined;
 
   constructor(private _elementRef: ElementRef<HTMLElement>) {}
+  //#region ControlValueAccessor
+  onChange = (_: any) => {};
+  onTouched = () => {};
+
+  writeValue(obj: any): void {
+    this.value = obj;
+  }
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+  //#endregion
 
   setDescribedByIds(ids: string[]): void {
     const controlElement =
@@ -36,5 +52,10 @@ export class TplAutocompleteComponent implements MatFormFieldControl<any> {
   }
   onContainerClick(event: MouseEvent): void {
     this.focused = true;
+  }
+
+  ngOnDestroy() {
+    this.stateChanges.complete();
+    // this._focusMonitor.stopMonitoring(this._elementRef);
   }
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MyTel } from './customs/models/my-tel';
 
 /** @title Form field with custom telephone number input control. */
@@ -10,6 +10,7 @@ import { MyTel } from './customs/models/my-tel';
 export class FormFieldCustomControlExample {
   form: FormGroup = new FormGroup({
     tel: new FormControl(new MyTel('', '', '')),
+    name: new FormControl('', Validators.required),
   });
 }
 
