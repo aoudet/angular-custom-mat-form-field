@@ -213,12 +213,6 @@ export class TplAutocompleteComponent<T>
   }
 
   _filter(value: string): T[] {
-    // const filterStr =
-    //   (typeof value === 'string' ? value : (<any>value)[this.filterField]) ||
-    //   '';
-    // cast to any to make sure string type wont be a pb while only User's prop works...
-    // aka filterField = test === true ? 'name' : 'title' : works bc both name and title are properties of User
-
     return this.options.filter((option) =>
       (<any>option)[this.filterField]
         .toLowerCase()
