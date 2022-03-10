@@ -15,6 +15,7 @@ import {
   FormControl,
   NgControl,
   NG_VALUE_ACCESSOR,
+  Validators,
 } from '@angular/forms';
 import {
   MatFormField,
@@ -71,6 +72,7 @@ export class TplAutocompleteComponent
   }
   set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
+    this._setValidation(this.required);
     this.stateChanges.next();
   }
   private _required = false;
@@ -147,6 +149,7 @@ export class TplAutocompleteComponent
   filteredOptions: Observable<string[]>;
 
   ngOnInit() {
+
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
@@ -159,6 +162,15 @@ export class TplAutocompleteComponent
     return this.options.filter((option) =>
       option.toLowerCase().includes(filterValue)
     );
+  }
+
+  private _setValidation(req: boolean) {
+    if (req === true) {
+      this.myControl.addValidators(Validators.required);
+    } else {
+      this.myControl.clearValidators();
+    }
+    this.myControl.updateValueAndValidity();
   }
 
   onFocusIn(event: FocusEvent) {
