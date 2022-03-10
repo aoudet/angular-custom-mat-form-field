@@ -157,7 +157,7 @@ export class TplAutocompleteComponent
       map((value) => this._filter(value))
     );
   }
-
+  
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
 

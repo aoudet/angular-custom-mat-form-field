@@ -10,8 +10,8 @@ import { MyTel } from './customs/models/my-tel';
 export class FormFieldCustomControlExample {
   form: FormGroup = new FormGroup({
     tel: new FormControl(new MyTel('', '', '')),
-    name: new FormControl('', Validators.required),
-    title: new FormControl('', Validators.required),
+    name: new FormControl(''),
+    title: new FormControl(''),
   });
 }
 
