@@ -170,7 +170,6 @@ export class TplAutocompleteComponent
   ngOnInit() {
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
-      tap(() => this.markAsTouched()),
       map((value) => this._filter(value))
     );
   }
@@ -200,7 +199,7 @@ export class TplAutocompleteComponent
 
   onFocusIn(event: FocusEvent) {
     if (!this.focused) {
-      this.markAsTouched();
+      // this.markAsTouched();
     }
   }
 
@@ -213,11 +212,15 @@ export class TplAutocompleteComponent
   }
 
   onSelection(event: MatAutocompleteSelectedEvent) {
-    const value = event.option.value;
-    this.currentObject = value;
+    // const value = event.option.value;
+    // this.currentObject = value;
+    // this.markAsTouched();
+    // this.onChange(value);
+  }
 
-    this.markAsTouched();
-    this.onChange(value);
+  displayFn(user?: User): string {
+    console.log(`user display fn is with user input`, user);
+    return (user && (<any>user)[this.filterField]) || '';
   }
 
   markAsTouched() {

@@ -10,8 +10,14 @@
   (focusout)="onFocusOut($event)"
 />
 
-<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)='onSelection($event)' >
+<mat-autocomplete
+  autoActiveFirstOption
+  #auto="matAutocomplete"
+  [displayWith]="displayFn.bind(this)"
+  (optionSelected)="onSelection($event)"
+>
   <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-    {{ option }}
+    {{ option.name | option.title }}
+    <span xx-small>{{ option.id }}</span>
   </mat-option>
 </mat-autocomplete>
