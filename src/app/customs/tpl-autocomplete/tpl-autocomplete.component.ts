@@ -161,9 +161,9 @@ export class TplAutocompleteComponent
   @Input() filterField: string = 'name';
 
   options: User[] = [
-    new User(1, 'One', '1'),
-    new User(2, 'Two', '2'),
-    new User(3, 'Three', '3'),
+    new User(1, 'One', 'un'),
+    new User(2, 'Two', 'deux'),
+    new User(3, 'Three', 'trois'),
   ];
   filteredOptions: Observable<User[]>;
 
@@ -199,7 +199,7 @@ export class TplAutocompleteComponent
 
   onFocusIn(event: FocusEvent) {
     if (!this.focused) {
-      // this.markAsTouched();
+      this.markAsTouched();
     }
   }
 
