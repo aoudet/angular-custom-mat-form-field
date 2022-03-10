@@ -16,6 +16,7 @@ import {
   FormBuilder,
   FormGroup,
   NgControl,
+  NG_VALUE_ACCESSOR,
   Validators,
 } from '@angular/forms';
 import {
@@ -30,7 +31,10 @@ import { MyTel } from '../models/my-tel';
   selector: 'app-tel-input',
   templateUrl: './tel-input.component.html',
   styleUrls: ['./tel-input.component.scss'],
-  providers: [{ provide: MatFormFieldControl, useExisting: TelInputComponent }],
+  providers: [
+    { provide: MatFormFieldControl, useExisting: TelInputComponent },
+    { provide: NG_VALUE_ACCESSOR, multi: true, useExisting: TelInputComponent },
+  ],
   host: {
     '[class.example-floating]': 'shouldLabelFloat',
     '[id]': 'id',

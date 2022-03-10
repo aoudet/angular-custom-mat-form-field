@@ -5,7 +5,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialExampleModule } from '../material.module';
 import {
   FormFieldCustomControlExample,
-  MyTelInput,
 } from './form-field-custom-control-example';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -14,7 +13,7 @@ import { MainComponent } from './main.component';
 import { TelInputComponent } from './customs/tel-input/tel-input.component';
 
 @NgModule({
-  declarations: [FormFieldCustomControlExample, MyTelInput, MainComponent, TelInputComponent],
+  declarations: [FormFieldCustomControlExample, TelInputComponent, MainComponent, TelInputComponent],
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
