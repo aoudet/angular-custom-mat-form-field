@@ -162,10 +162,7 @@ export class TplAutocompleteComponent<T>
       .pipe(filter(() => Boolean(this.autoTrigger.activeOption)))
       .subscribe((data) => {
         //TODO HERE
-        alert(
-          'data sent TO Form is ' +
-            JSON.stringify(this.autoTrigger.activeOption)
-        );
+        alert('data sent TO Form is ' + this.autoTrigger.activeOption?.value);
         this.onSelection({
           source: {} as _MatAutocompleteBase,
           option: this.autoTrigger.activeOption as _MatOptionBase,
