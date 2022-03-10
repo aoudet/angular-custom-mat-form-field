@@ -162,7 +162,10 @@ export class TplAutocompleteComponent<T>
       .pipe(filter(() => Boolean(this.autoTrigger.activeOption)))
       .subscribe((data) => {
         //TODO HERE
-        alert('data sent TO Form is ' + this.autoTrigger.activeOption?.value);
+        alert(
+          'data sent TO Form is ' +
+            JSON.stringify(this.autoTrigger.activeOption?.value)
+        );
         this.onSelection({
           source: {} as _MatAutocompleteBase,
           option: this.autoTrigger.activeOption as _MatOptionBase,
@@ -218,14 +221,15 @@ export class TplAutocompleteComponent<T>
 
   onSelection(event: MatAutocompleteSelectedEvent) {
     const value = event.option.value;
+    alert('data onSelection ' + JSON.stringify(value));
     this.currentObject = value;
     this.markAsTouched();
     this.onChange(value);
   }
 
-  displayFn(user?: T): string {
-    console.log(`user display fn is with user input`, user);
-    return (user && (<any>user)[this.filterField]) || '';
+  displayFn(data?: T): string {
+    alert(`user display fn is with user input: ` + data);
+    return (data && (<any>data)[this.filterField]) || '';
   }
 
   markAsTouched() {
