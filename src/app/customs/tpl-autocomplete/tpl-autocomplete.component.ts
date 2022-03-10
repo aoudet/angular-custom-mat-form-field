@@ -16,13 +16,25 @@ import {
   NgControl,
   Validators,
 } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import {
+  MatAutocompleteSelectedEvent,
+  MatAutocompleteTrigger,
+  _MatAutocompleteBase,
+} from '@angular/material/autocomplete';
+import { _MatOptionBase } from '@angular/material/core';
 import {
   MatFormField,
   MatFormFieldControl,
   MAT_FORM_FIELD,
 } from '@angular/material/form-field';
-import { map, Observable, startWith, Subject } from 'rxjs';
+import {
+  filter,
+  map,
+  Observable,
+  startWith,
+  Subject,
+  Subscription,
+} from 'rxjs';
 
 @Component({
   selector: 'app-tpl-autocomplete',
@@ -40,6 +52,8 @@ export class TplAutocompleteComponent<T>
 {
   static nextId = 0;
   @ViewChild('autoInput') autoInput: HTMLInputElement;
+  @ViewChild('autoInput', { read: MatAutocompleteTrigger, static: false })
+  autoTrigger: MatAutocompleteTrigger;
 
   myControl = new FormControl();
   currentObject: T;
@@ -54,6 +68,8 @@ export class TplAutocompleteComponent<T>
   touched = false;
   controlType = 'tpl-autocomplete';
   autofilled?: boolean | undefined;
+
+  private autoTriggerSubscription: Subscription;
 
   get empty() {
     return this.myControl.value === '' || this.myControl.value === null;
@@ -141,6 +157,17 @@ export class TplAutocompleteComponent<T>
     );
   }
 
+  ngAfterViewInit() {
+    this.autoTriggerSubscription = this.autoTrigger.panelClosingActions
+      .pipe(filter(() => Boolean(this.autoTrigger.activeOption)))
+      .subscribe((data) =>
+        this.onSelection({
+          source: {} as _MatAutocompleteBase,
+          option: this.autoTrigger.activeOption as _MatOptionBase,
+        })
+      );
+  }
+
   //#region ControlValueAccessor
   onChange = (_: any) => {};
   onTouched = () => {};
@@ -207,17 +234,19 @@ export class TplAutocompleteComponent<T>
     this.stateChanges.next();
   }
 
-  ngOnDestroy() {
-    this.stateChanges.complete();
-    this._focusMonitor.stopMonitoring(this._elementRef);
-  }
-
+  // THE one needed to be overriden in any directive
   _filter(value: string): T[] {
     return this.options.filter((option) =>
       (<any>option)[this.filterField]
         .toLowerCase()
         .includes(value.toLowerCase())
     );
+  }
+
+  ngOnDestroy() {
+    this.autoTriggerSubscription.unsubscribe();
+    this.stateChanges.complete();
+    this._focusMonitor.stopMonitoring(this._elementRef);
   }
 
   private _setValidation(req: boolean) {
