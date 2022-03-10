@@ -1,2 +1,17 @@
 <!-- <p>tpl-autocomplete works!</p> -->
-<input matInput type="text" placeholder="text is here" />
+<input
+  #autoInput
+  matInput
+  type="text"
+  placeholder="text is here"
+  [matAutocomplete]="auto"
+  [formControl]="myControl"
+  (focusin)="onFocusIn($event)"
+  (focusout)="onFocusOut($event)"
+/>
+
+<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+  <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+    {{ option }}
+  </mat-option>
+</mat-autocomplete>

@@ -1,5 +1,5 @@
 <div [formGroup]="form">
-  <mat-form-field appearance="fill" *ngIf='false'>
+  <mat-form-field appearance="fill" *ngIf="false">
     <mat-label>Phone number</mat-label>
     <app-tel-input formControlName="tel" required></app-tel-input>
     <mat-icon matSuffix>phone</mat-icon>
@@ -8,11 +8,16 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Name searcher</mat-label>
-    <app-tpl-autocomplete formControlName="name"></app-tpl-autocomplete>
+    <app-tpl-autocomplete
+      formControlName="name"
+      required
+    ></app-tpl-autocomplete>
     <mat-icon matSuffix>info</mat-icon>
     <mat-hint>start typing</mat-hint>
   </mat-form-field>
 </div>
+<br />
+<p>outside Form: {{form.value | json}}</p>
 
 <!-- Copyright 2022 Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
