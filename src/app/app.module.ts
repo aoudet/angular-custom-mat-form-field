@@ -9,12 +9,14 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { HttpClientModule } from '@angular/common/http';
 import { MainComponent } from './main.component';
 import { TelInputComponent } from './customs/tel-input/tel-input.component';
+import { TplAutocompleteComponent } from './customs/tpl-autocomplete/tpl-autocomplete.component';
 
 @NgModule({
   declarations: [
     FormFieldCustomControlExample,
     TelInputComponent,
     MainComponent,
+    TplAutocompleteComponent,
   ],
   imports: [
     BrowserAnimationsModule,
