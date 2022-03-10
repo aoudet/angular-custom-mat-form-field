@@ -23,7 +23,6 @@ import {
   MAT_FORM_FIELD,
 } from '@angular/material/form-field';
 import { map, Observable, startWith, Subject } from 'rxjs';
-import { T } from '../models/user';
 
 @Component({
   selector: 'app-tpl-autocomplete',
@@ -36,7 +35,7 @@ import { T } from '../models/user';
     '[id]': 'id',
   },
 })
-export class TplAutocompleteComponent
+export class TplAutocompleteComponent<T>
   implements MatFormFieldControl<T>, ControlValueAccessor, OnInit
 {
   static nextId = 0;
