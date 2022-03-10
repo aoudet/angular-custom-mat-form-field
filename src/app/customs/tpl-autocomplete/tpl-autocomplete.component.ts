@@ -160,12 +160,17 @@ export class TplAutocompleteComponent<T>
   ngAfterViewInit() {
     this.autoTriggerSubscription = this.autoTrigger.panelClosingActions
       .pipe(filter(() => Boolean(this.autoTrigger.activeOption)))
-      .subscribe((data) =>
+      .subscribe((data) => {
+        //TODO HERE
+        alert(
+          'data sent TO Form is ' +
+            JSON.stringify(this.autoTrigger.activeOption)
+        );
         this.onSelection({
           source: {} as _MatAutocompleteBase,
           option: this.autoTrigger.activeOption as _MatOptionBase,
-        })
-      );
+        });
+      });
   }
 
   //#region ControlValueAccessor
