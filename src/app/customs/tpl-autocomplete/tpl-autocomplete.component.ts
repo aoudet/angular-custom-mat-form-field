@@ -22,7 +22,7 @@ import {
   MatFormFieldControl,
   MAT_FORM_FIELD,
 } from '@angular/material/form-field';
-import { map, Observable, startWith, Subject, tap } from 'rxjs';
+import { map, Observable, startWith, Subject } from 'rxjs';
 import { User } from '../models/user';
 
 @Component({
@@ -50,6 +50,7 @@ export class TplAutocompleteComponent
     new User(2, 'Two', 'deux'),
     new User(3, 'Three', 'trois'),
   ];
+
   filteredOptions: Observable<User[]>;
 
   //MatFormFieldControl implementation properties
@@ -65,7 +66,7 @@ export class TplAutocompleteComponent
   }
 
   get shouldLabelFloat() {
-    return this.focused || !this.empty;
+    return this.focused || !this.empty || this.myControl.invalid;
   }
 
   get errorState(): boolean {
@@ -211,7 +212,7 @@ export class TplAutocompleteComponent
     this._focusMonitor.stopMonitoring(this._elementRef);
   }
 
-  private _filter(value: string | User): User[] {
+  _filter(value: string | User): User[] {
     const filterStr =
       (typeof value === 'string' ? value : (<any>value)[this.filterField]) ||
       '';
