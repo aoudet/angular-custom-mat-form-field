@@ -40,6 +40,19 @@ export class TplAutocompleteComponent
   implements MatFormFieldControl<User>, ControlValueAccessor, OnInit
 {
   static nextId = 0;
+  @ViewChild('autoInput') autoInput: HTMLInputElement;
+
+  myControl = new FormControl();
+  currentObject: User;
+
+  options: User[] = [
+    new User(1, 'One', 'un'),
+    new User(2, 'Two', 'deux'),
+    new User(3, 'Three', 'trois'),
+  ];
+  filteredOptions: Observable<User[]>;
+
+  //MatFormFieldControl implementation properties
   stateChanges = new Subject<void>();
   id = `tpl-autocomplete-${TplAutocompleteComponent.nextId++}`;
   focused = false;
@@ -55,6 +68,11 @@ export class TplAutocompleteComponent
     return this.focused || !this.empty;
   }
 
+  get errorState(): boolean {
+    return this.myControl.invalid && this.touched;
+  }
+
+  @Input() filterField: string = 'name';
   @Input('aria-describedby') userAriaDescribedBy: string;
 
   @Input()
@@ -104,10 +122,6 @@ export class TplAutocompleteComponent
     this.stateChanges.next();
   }
 
-  get errorState(): boolean {
-    return this.myControl.invalid && this.touched;
-  }
-
   constructor(
     private _elementRef: ElementRef<HTMLElement>,
     private _focusMonitor: FocusMonitor,
@@ -118,6 +132,14 @@ export class TplAutocompleteComponent
       this.ngControl.valueAccessor = this;
     }
   }
+
+  ngOnInit() {
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value))
+    );
+  }
+
   //#region ControlValueAccessor
   onChange = (_: any) => {};
   onTouched = () => {};
@@ -145,33 +167,48 @@ export class TplAutocompleteComponent
       this._elementRef.nativeElement.querySelector('input')!;
     controlElement.setAttribute('aria-describedby', ids.join(' '));
   }
+
   onContainerClick(event: MouseEvent): void {
     this._focusMonitor.focusVia(this.autoInput, 'program');
+  }
+
+  onFocusIn(event: FocusEvent) {
+    if (!this.focused) {
+      this.markAsTouched();
+    }
+  }
+
+  onFocusOut(event: FocusEvent) {
+    if (
+      !this._elementRef.nativeElement.contains(event.relatedTarget as Element)
+    ) {
+      this.focused = false;
+    }
+  }
+
+  onSelection(event: MatAutocompleteSelectedEvent) {
+    const value = event.option.value;
+    this.currentObject = value;
+    this.markAsTouched();
+    this.onChange(value);
+  }
+
+  displayFn(user?: User): string {
+    console.log(`user display fn is with user input`, user);
+    return (user && (<any>user)[this.filterField]) || '';
+  }
+
+  markAsTouched() {
+    if (!this.touched) {
+      this.onTouched();
+      this.touched = true;
+    }
+    this.stateChanges.next();
   }
 
   ngOnDestroy() {
     this.stateChanges.complete();
     this._focusMonitor.stopMonitoring(this._elementRef);
-  }
-
-  @ViewChild('autoInput') autoInput: HTMLInputElement;
-
-  myControl = new FormControl();
-  currentObject: User;
-  @Input() filterField: string = 'name';
-
-  options: User[] = [
-    new User(1, 'One', 'un'),
-    new User(2, 'Two', 'deux'),
-    new User(3, 'Three', 'trois'),
-  ];
-  filteredOptions: Observable<User[]>;
-
-  ngOnInit() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map((value) => this._filter(value))
-    );
   }
 
   private _filter(value: string | User): User[] {
@@ -195,39 +232,5 @@ export class TplAutocompleteComponent
       this.myControl.clearValidators();
     }
     this.myControl.updateValueAndValidity();
-  }
-
-  onFocusIn(event: FocusEvent) {
-    if (!this.focused) {
-      this.markAsTouched();
-    }
-  }
-
-  onFocusOut(event: FocusEvent) {
-    if (
-      !this._elementRef.nativeElement.contains(event.relatedTarget as Element)
-    ) {
-      this.focused = false;
-    }
-  }
-
-  onSelection(event: MatAutocompleteSelectedEvent) {
-    // const value = event.option.value;
-    // this.currentObject = value;
-    // this.markAsTouched();
-    // this.onChange(value);
-  }
-
-  displayFn(user?: User): string {
-    console.log(`user display fn is with user input`, user);
-    return (user && (<any>user)[this.filterField]) || '';
-  }
-
-  markAsTouched() {
-    if (!this.touched) {
-      this.onTouched();
-      this.touched = true;
-    }
-    this.stateChanges.next();
   }
 }
