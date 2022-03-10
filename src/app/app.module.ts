@@ -1,15 +1,20 @@
-import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import {MaterialExampleModule} from '../material.module';
-import {FormFieldCustomControlExample, MyTelInput} from './form-field-custom-control-example';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatNativeDateModule} from '@angular/material/core';
-import {HttpClientModule} from '@angular/common/http';
+import { MaterialExampleModule } from '../material.module';
+import {
+  FormFieldCustomControlExample,
+  MyTelInput,
+} from './form-field-custom-control-example';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatNativeDateModule } from '@angular/material/core';
+import { HttpClientModule } from '@angular/common/http';
+import { MainComponent } from './main.component';
+import { TelInputComponent } from './customs/tel-input/tel-input.component';
 
 @NgModule({
-  declarations: [FormFieldCustomControlExample, MyTelInput],
+  declarations: [FormFieldCustomControlExample, MyTelInput, MainComponent, TelInputComponent],
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
@@ -20,6 +25,6 @@ import {HttpClientModule} from '@angular/common/http';
     ReactiveFormsModule,
   ],
   providers: [],
-  bootstrap: [FormFieldCustomControlExample],
+  bootstrap: [MainComponent],
 })
 export class AppModule {}
