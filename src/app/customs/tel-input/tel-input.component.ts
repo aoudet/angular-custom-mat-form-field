@@ -127,9 +127,9 @@ export class TelInputComponent
     formBuilder: FormBuilder,
     private _focusMonitor: FocusMonitor,
     private _elementRef: ElementRef<HTMLElement>,
-    @Optional() @Inject(MAT_FORM_FIELD) public _formField: MatFormField
-  ) // @Optional() @Self() public ngControl: NgControl
-  {
+    @Optional() @Inject(MAT_FORM_FIELD) public _formField: MatFormField,
+    @Optional() @Self() public ngControl: NgControl
+  ) {
     this.parts = formBuilder.group({
       area: [
         null,
@@ -145,9 +145,9 @@ export class TelInputComponent
       ],
     });
 
-    // if (this.ngControl != null) {
-    //   this.ngControl.valueAccessor = this;
-    // }
+    if (this.ngControl != null) {
+      this.ngControl.valueAccessor = this;
+    }
   }
 
   ngOnDestroy() {

@@ -1,5 +1,9 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  NgControl,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { Observable, Subject } from 'rxjs';
 
@@ -9,6 +13,11 @@ import { Observable, Subject } from 'rxjs';
   styleUrls: ['./tpl-autocomplete.component.scss'],
   providers: [
     { provide: MatFormFieldControl, useExisting: TplAutocompleteComponent },
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: TplAutocompleteComponent,
+    },
   ],
 })
 export class TplAutocompleteComponent
@@ -52,6 +61,9 @@ export class TplAutocompleteComponent
   }
   onContainerClick(event: MouseEvent): void {
     this.focused = true;
+    const controlElement =
+    this._elementRef.nativeElement.querySelector('input')!;
+    controlElement.focus();
   }
 
   ngOnDestroy() {
