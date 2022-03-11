@@ -61,8 +61,10 @@ export class TplAutocompleteComponent<T>
   }
   set currentObject(value: T) {
     this._currentObject = value;
-    console.log(`set current Obje with value `, value);
-    this.myControl.setValue((<any>this.currentObject)[this.filterField]);
+    console.log(`set current Object with value `, value);
+    if (value) {
+      this.autoTrigger.writeValue(value);
+    }
   }
   private _currentObject: T;
 
@@ -225,6 +227,7 @@ export class TplAutocompleteComponent<T>
     const value = event.option.value;
     console.log(`onSelection value`, value);
     this.currentObject = value;
+  
     this.markAsTouched();
     this.onChange(value);
   }
