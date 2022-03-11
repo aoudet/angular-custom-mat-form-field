@@ -11,6 +11,7 @@ import { MainComponent } from './main.component';
 import { TelInputComponent } from './customs/tel-input/tel-input.component';
 import { TplAutocompleteComponent } from './customs/tpl-autocomplete/tpl-autocomplete.component';
 import { UsersDirective } from './customs/tpl-autocomplete/directives/users.directive';
+import { TplAutocompleteEmitterComponent } from './customs/tpl-autocomplete-emitter/tpl-autocomplete-emitter.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { UsersDirective } from './customs/tpl-autocomplete/directives/users.dire
     MainComponent,
     TplAutocompleteComponent,
     UsersDirective,
+    TplAutocompleteEmitterComponent,
   ],
   imports: [
     BrowserAnimationsModule,
