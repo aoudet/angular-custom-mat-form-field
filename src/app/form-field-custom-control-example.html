@@ -6,26 +6,30 @@
     <mat-hint>Include area code</mat-hint>
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Name searcher</mat-label>
-    <app-tpl-autocomplete
-      [options]="options"
-      formControlName="name"
-      required
-    ></app-tpl-autocomplete>
-    <mat-icon matSuffix>info</mat-icon>
-    <mat-hint>start typing</mat-hint>
-  </mat-form-field>
-  <br /><br />
-  <mat-form-field appearance="fill">
-    <mat-label>Title searcher</mat-label>
-    <app-tpl-autocomplete
-      appUsers
-      formControlName="title"
-      filterField="title"
-      required
-    ></app-tpl-autocomplete>
-  </mat-form-field>
+  <br>
+  <div formGroupName="user">
+    <mat-form-field appearance="fill">
+        <mat-label>Name searcher</mat-label>
+        <app-tpl-autocomplete
+          [options]="options"
+          formControlName="name"
+          required
+        ></app-tpl-autocomplete>
+        <mat-icon matSuffix>info</mat-icon>
+        <mat-hint>start typing</mat-hint>
+      </mat-form-field>
+      <br /><br />
+      <mat-form-field appearance="fill">
+        <mat-label>Title searcher</mat-label>
+        <app-tpl-autocomplete
+          appUsers
+          formControlName="title"
+          filterField="title"
+          required
+        ></app-tpl-autocomplete>
+      </mat-form-field>
+  </div>
+  
 </div>
 <br />
 <p>outside Form: {{form.value | json}}</p>

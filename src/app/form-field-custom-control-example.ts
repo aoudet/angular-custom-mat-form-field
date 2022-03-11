@@ -11,8 +11,11 @@ import { User } from './customs/models/user';
 export class FormFieldCustomControlExample {
   form: FormGroup = new FormGroup({
     tel: new FormControl(new MyTel('', '', '')),
-    name: new FormControl(''),
-    title: new FormControl(''),
+    user: new FormGroup({
+      name: new FormControl(''),
+      title: new FormControl(''),
+    })
+    
   });
 
   options = [
