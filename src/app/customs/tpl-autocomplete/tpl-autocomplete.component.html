@@ -13,7 +13,7 @@
 />
 
 <mat-autocomplete
-  autoActiveFirstOption
+  [autoActiveFirstOption]="empty"
   #auto="matAutocomplete"
   [displayWith]="displayFn.bind(this)"
   (optionSelected)="onSelection($event)"

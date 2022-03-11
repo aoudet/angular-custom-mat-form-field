@@ -62,7 +62,7 @@ export class TplAutocompleteComponent<T>
   set currentObject(value: T) {
     this._currentObject = value;
     console.log(`set current Object with value `, value);
-    if (value) {
+    if (value && this.autoTrigger) {
       this.autoTrigger.writeValue(value);
     }
   }
@@ -139,7 +139,7 @@ export class TplAutocompleteComponent<T>
   }
   set value(value: T | null) {
     console.log(`value (set) from ctr id ${this.id}`, value);
-    this.myControl.setValue(value);
+    this.myControl.setValue({[this.filterField] : value});    // javascript way of getting a genereic field name
     this.stateChanges.next();
   }
 
@@ -188,7 +188,8 @@ export class TplAutocompleteComponent<T>
    */
   writeValue(obj: T): void {
     console.log(`writeValue from ctr id ${this.id}`, obj);
-    this.currentObject = obj;
+    // this.currentObject = obj;
+    this.value = obj;
   }
 
   registerOnChange(fn: any): void {
@@ -244,15 +245,7 @@ export class TplAutocompleteComponent<T>
   }
 
   // THE one needed to be overriden in any directive
-  _filter(value: string): T[] {
-    // original 
-    // return this.options.filter((option) =>
-    // {
-    //   return (<any>option)[this.filterField]
-    //     .toLowerCase()
-    //     .includes(value.toLowerCase())
-    // });
-      
+  _filter(value: string): T[] {      
     const filtered =  this.options.filter((option) => {
       return (<any>option)[this.filterField]
         .toLowerCase()
