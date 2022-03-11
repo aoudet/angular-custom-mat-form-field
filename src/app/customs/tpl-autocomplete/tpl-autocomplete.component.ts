@@ -164,7 +164,7 @@ export class TplAutocompleteComponent<T>
             : (<any>value)[this.filterField]) || ''
       ),
       map((value) => this._filter(value))
-    );
+    );    
   }
 
   ngAfterViewInit() {
@@ -225,7 +225,6 @@ export class TplAutocompleteComponent<T>
 
   onSelection(event: MatAutocompleteSelectedEvent) {
     const value = event.option.value;
-    console.log(`onSelection value`, value);
     this.currentObject = value;
   
     this.markAsTouched();
@@ -246,11 +245,26 @@ export class TplAutocompleteComponent<T>
 
   // THE one needed to be overriden in any directive
   _filter(value: string): T[] {
-    return this.options.filter((option) =>
-      (<any>option)[this.filterField]
+    // original 
+    // return this.options.filter((option) =>
+    // {
+    //   return (<any>option)[this.filterField]
+    //     .toLowerCase()
+    //     .includes(value.toLowerCase())
+    // });
+      
+    const filtered =  this.options.filter((option) => {
+      return (<any>option)[this.filterField]
         .toLowerCase()
         .includes(value.toLowerCase())
-    );
+    });
+
+    if (filtered.length === 0) {
+      const adding = this.createUnknownObject(value, true);  
+      if (adding as T){ filtered.unshift(adding); }
+    }
+    
+    return filtered;
   }
 
   ngOnDestroy() {
@@ -266,5 +280,16 @@ export class TplAutocompleteComponent<T>
       this.myControl.clearValidators();
     }
     this.myControl.updateValueAndValidity();
+  }
+
+  private createUnknownObject(value: string, resetId: boolean = false): T {
+    const locVar = <any>this.currentObject || {} as T;
+
+    if (locVar.id === -1 || resetId) {
+      locVar.id = -1;
+      locVar[this.filterField]= value;
+    }
+
+    return locVar;
   }
 }
