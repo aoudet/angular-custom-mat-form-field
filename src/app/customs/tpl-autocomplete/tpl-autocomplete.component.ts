@@ -56,7 +56,14 @@ export class TplAutocompleteComponent<T>
   autoTrigger: MatAutocompleteTrigger;
 
   myControl = new FormControl();
-  currentObject: T;
+  get currentObject(): T {
+    return this._currentObject;
+  }
+  set currentObject(value: T) {
+    this._currentObject = value;
+    this.myControl.setValue((<any>this.currentObject)[this.filterField]);
+  }
+  private _currentObject: T;
 
   @Input() options: T[] = [];
   filteredOptions: Observable<any[]>;
@@ -184,7 +191,7 @@ export class TplAutocompleteComponent<T>
   writeValue(obj: T): void {
     console.log(`writeValue from ctr id ${this.id}`, obj);
     this.currentObject = obj;
-    this.myControl.setValue((<any>this.currentObject)[this.filterField]);
+    // this.myControl.setValue((<any>this.currentObject)[this.filterField]);
   }
 
   registerOnChange(fn: any): void {
