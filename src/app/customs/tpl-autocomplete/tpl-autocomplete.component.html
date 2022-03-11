@@ -1,4 +1,8 @@
-<!-- <p>tpl-autocomplete works!</p> -->
+<!-- <p>tpl-autocomplete works!</p> 
+  (focusin)="onFocusIn($event)"
+  (focusout)="onFocusOut($event)"
+
+-->
 <input
   #autoInput
   matInput
@@ -6,8 +10,6 @@
   placeholder="text is here"
   [matAutocomplete]="auto"
   [formControl]="myControl"
-  (focusin)="onFocusIn($event)"
-  (focusout)="onFocusOut($event)"
 />
 
 <mat-autocomplete

@@ -221,14 +221,12 @@ export class TplAutocompleteComponent<T>
 
   onSelection(event: MatAutocompleteSelectedEvent) {
     const value = event.option.value;
-    alert('data onSelection ' + JSON.stringify(value));
     this.currentObject = value;
     this.markAsTouched();
     this.onChange(value);
   }
 
   displayFn(data?: T): string {
-    alert(`user display fn is with user input: ` + data);
     return (data && (<any>data)[this.filterField]) || '';
   }
 
