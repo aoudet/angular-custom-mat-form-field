@@ -61,6 +61,7 @@ export class TplAutocompleteComponent<T>
   }
   set currentObject(value: T) {
     this._currentObject = value;
+    console.log(`set current Obje with value `, value);
     this.myControl.setValue((<any>this.currentObject)[this.filterField]);
   }
   private _currentObject: T;
@@ -168,11 +169,6 @@ export class TplAutocompleteComponent<T>
     this.autoTriggerSubscription = this.autoTrigger.panelClosingActions
       .pipe(filter(() => Boolean(this.autoTrigger.activeOption)))
       .subscribe((data) => {
-        //TODO HERE
-        alert(
-          'data sent TO Form is ' +
-            JSON.stringify(this.autoTrigger.activeOption?.value)
-        );
         this.onSelection({
           source: {} as _MatAutocompleteBase,
           option: this.autoTrigger.activeOption as _MatOptionBase,
@@ -191,7 +187,6 @@ export class TplAutocompleteComponent<T>
   writeValue(obj: T): void {
     console.log(`writeValue from ctr id ${this.id}`, obj);
     this.currentObject = obj;
-    // this.myControl.setValue((<any>this.currentObject)[this.filterField]);
   }
 
   registerOnChange(fn: any): void {
@@ -228,6 +223,7 @@ export class TplAutocompleteComponent<T>
 
   onSelection(event: MatAutocompleteSelectedEvent) {
     const value = event.option.value;
+    console.log(`onSelection value`, value);
     this.currentObject = value;
     this.markAsTouched();
     this.onChange(value);
