@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger, _MatAutocompleteBase } from '@angular/material/autocomplete';
 import { _MatOptionBase } from '@angular/material/core';
 import { EMPTY, filter, map, Observable, startWith, Subscription, tap } from 'rxjs';
@@ -41,7 +41,7 @@ export class FormFieldCustomControlExample  implements OnInit, AfterViewInit {
   autoTriggerName: MatAutocompleteTrigger;
 
   ngOnInit() {
-    this.form.get('user')?.setValue({ name: this.currentUser.name, title: this.currentUser.title });  // need this line first
+    this.form.get('user')?.setValue({ name: this.currentUser , title: this.currentUser  });  // need this line first
     
     this.filteredNameOptions$ = (this.form.get('user.name') || {} as AbstractControl).valueChanges
       .pipe(
@@ -69,10 +69,14 @@ export class FormFieldCustomControlExample  implements OnInit, AfterViewInit {
         )
         .subscribe((data) => {
           this.form.get('user.name')?.setValue(this.autoTriggerName.activeOption?.value);
-          this.autoTriggerName.autocomplete.optionSelected.emit({         
-            source: {id: 'name'} as _MatAutocompleteBase,
+          this.autoTriggerName.autocomplete.optionSelected.emit({
+            source: { id: 'name' } as _MatAutocompleteBase,
             option: this.autoTriggerName.activeOption as _MatOptionBase,
-         } as MatAutocompleteSelectedEvent )
+          } as MatAutocompleteSelectedEvent);
+
+          // update next autocomplete trigger value... will it helps to filter out when palen opens?
+          //this.autoTriggerTitle.writeValue(this.autoTriggerName.activeOption?.value);
+          this.form.get('user.title')?.setValue(this.autoTriggerName.activeOption?.value);
         }),
       
       this.autoTriggerTitle.panelClosingActions
@@ -81,10 +85,12 @@ export class FormFieldCustomControlExample  implements OnInit, AfterViewInit {
           filter(() => Boolean(this.autoTriggerTitle.activeOption)))
         .subscribe((data) => {   
           this.form.get('user.title')?.setValue(this.autoTriggerTitle.activeOption?.value);
-          this.autoTriggerTitle.autocomplete.optionSelected.emit({         
-            source: {id: 'title'} as _MatAutocompleteBase,
+          this.autoTriggerTitle.autocomplete.optionSelected.emit({
+            source: { id: 'title' } as _MatAutocompleteBase,
             option: this.autoTriggerTitle.activeOption as _MatOptionBase,
-         } as MatAutocompleteSelectedEvent )
+          } as MatAutocompleteSelectedEvent);
+
+          this.autoTriggerName.writeValue(this.autoTriggerTitle.activeOption?.value);
         }),
       
     );
@@ -99,6 +105,14 @@ export class FormFieldCustomControlExample  implements OnInit, AfterViewInit {
     
     console.log('onSelection post avtions returns with', [this.autoTriggerName, this.autoTriggerTitle]);
   }
+
+  displayNameWith(option: User): string {
+    return option?.name || 'NAME';
+  }
+  displayTitleWith(option: User): string {
+    return option?.title || '';
+  }
+
 
   private _filter(value: string, filterField: string='name'): User[] {      
     const filtered =  this.options.filter((option) => {
