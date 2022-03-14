@@ -1,6 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   Inject,
@@ -48,7 +49,7 @@ import {
   },
 })
 export class TplAutocompleteComponent<T>
-  implements MatFormFieldControl<T>, ControlValueAccessor, OnInit
+  implements MatFormFieldControl<T>, ControlValueAccessor, OnInit, AfterViewInit
 {
   static nextId = 0;
   @ViewChild('autoInput') autoInput: HTMLInputElement;

@@ -62,14 +62,14 @@
         <input #autoInputTitle matInput type="text" placeholder="text is here" [matAutocomplete]="autoTitle"  formControlName="title" />
       </mat-form-field>
 
-      <mat-autocomplete #autoName="matAutocomplete" (optionSelected)="onSelection($event)" >
+      <mat-autocomplete id='name' #autoName="matAutocomplete" (optionSelected)="onSelection($event)" >
         <mat-option *ngFor="let option of filteredNameOptions$ | async" [value]="option.name">
           <strong>{{ option.name }}</strong> | {{ option.title }} ||
           <span xx-small>{{ option.id }}</span>
         </mat-option>
       </mat-autocomplete>
 
-      <mat-autocomplete #autoTitle="matAutocomplete" (optionSelected)="onSelection($event)" >
+      <mat-autocomplete id='title' #autoTitle="matAutocomplete" (optionSelected)="onSelection($event)" >
         <mat-option *ngFor="let option of filteredTitleOptions$ | async" [value]="option.title">
           {{ option.name }} | <strong>{{ option.title }}</strong> ||
           <span xx-small>{{ option.id }}</span>
