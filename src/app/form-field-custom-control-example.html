@@ -7,7 +7,7 @@
   </mat-form-field>
 
   <br>
-  <div formGroupName="user"  *ngIf="false" 
+  <div formGroupName="user"  
       style="border: 1px black dotted; padding: 1em">
     <mat-form-field appearance="fill">
         <mat-label>Name searcher</mat-label>
@@ -31,7 +31,7 @@
       </mat-form-field>
   </div>
 
-    <div formGroupName="user" style="border: 1px black solid; padding: 1em">
+    <div formGroupName="user" style="border: 1px black solid; padding: 1em"  *ngIf="false">
       <mat-form-field appearance="fill">
         <mat-label>NAME searcher</mat-label>      
         <input #autoInputName matInput type="text" placeholder="text is here" [matAutocomplete]="autoName"  formControlName="name" />

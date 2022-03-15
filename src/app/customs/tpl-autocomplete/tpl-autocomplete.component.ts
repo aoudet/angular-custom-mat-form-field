@@ -140,7 +140,8 @@ export class TplAutocompleteComponent<T>
   }
   set value(value: T | null) {
     console.log(`value (set) from ctr id ${this.id}`, value);
-    this.myControl.setValue({[this.filterField] : value});    // javascript way of getting a genereic field name
+    this.currentObject = value as T;
+    this.myControl.setValue( value);  
     this.stateChanges.next();
   }
 
@@ -234,6 +235,7 @@ export class TplAutocompleteComponent<T>
   }
 
   displayFn(data?: T): string {
+    console.log('display fn data', data);
     return (data && (<any>data)[this.filterField]) || '';
   }
 

@@ -62,7 +62,7 @@ export class FormFieldCustomControlExample  implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.autoTriggerSubscriptions.push(
-      this.autoTriggerName.panelClosingActions
+      this.autoTriggerName?.panelClosingActions
         .pipe(
           tap(data => console.log(`autoTriggerName closing with `, this.autoTriggerName.activeOption)),
           filter(() => Boolean(this.autoTriggerName.activeOption))
@@ -79,7 +79,7 @@ export class FormFieldCustomControlExample  implements OnInit, AfterViewInit {
           this.form.get('user.title')?.setValue(this.autoTriggerName.activeOption?.value);
         }),
       
-      this.autoTriggerTitle.panelClosingActions
+      this.autoTriggerTitle?.panelClosingActions
         .pipe(
           tap(data => console.log(`autoTriggerTitle closing with `, this.autoTriggerTitle.activeOption)),
           filter(() => Boolean(this.autoTriggerTitle.activeOption)))
