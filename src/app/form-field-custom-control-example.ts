@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger, _MatAutocompleteBase } from '@angular/material/autocomplete';
 import { _MatOptionBase } from '@angular/material/core';
-import { EMPTY, filter, map, Observable, startWith, Subscription, tap } from 'rxjs';
+import { distinctUntilChanged, EMPTY, filter, map, Observable, startWith, Subscription, tap, withLatestFrom } from 'rxjs';
 import { MyTel } from './customs/models/my-tel';
 import { User } from './customs/models/user';
 
@@ -43,21 +43,36 @@ export class FormFieldCustomControlExample  implements OnInit, AfterViewInit {
   ngOnInit() {
     this.form.get('user')?.setValue({ name: this.currentUser , title: this.currentUser  });  // need this line first
     
-    this.filteredNameOptions$ = (this.form.get('user.name') || {} as AbstractControl).valueChanges
-      .pipe(
-        tap(data => console.log(`filteredNameOptions$ from values changes gets`, data)),
-        startWith(this.form.get('user.name')?.value || ''),    // works BC setValue is called before...
-        map((value: string | User): string => (typeof value === 'string' ? value : (<any>value)['name']) || '' ),
-        map((value) => this._filter(value))
-      );
+    // this.filteredNameOptions$ = (this.form.get('user.name') || {} as AbstractControl).valueChanges
+    //   .pipe(
+    //     tap(data => console.log(`filteredNameOptions$ from values changes gets`, data)),
+    //     startWith(this.form.get('user.name')?.value || ''),    // works BC setValue is called before...
+    //     map((value: string | User): string => (typeof value === 'string' ? value : (<any>value)['name']) || '' ),
+    //     map((value) => this._filter(value))
+    //   );
 
-    this.filteredTitleOptions$ = (this.form.get('user.title') || {} as AbstractControl).valueChanges
+    // this.filteredTitleOptions$ = (this.form.get('user.title') || {} as AbstractControl).valueChanges
+    //   .pipe(
+    //     tap(data => console.log(`filteredTitleOptions$ from values changes gets`, data)),
+    //     startWith(this.form.get('user.title')?.value || ''),    // works BC setValue is called before...
+    //     map((value: string | User): string => (typeof value === 'string' ? value : (<any>value)['title']) || '' ),
+    //     map((value) => this._filter(value, 'title'))
+    //   );
+
+
+    (this.form.get('user.name') || {} as AbstractControl).valueChanges
       .pipe(
-        tap(data => console.log(`filteredTitleOptions$ from values changes gets`, data)),
-        startWith(this.form.get('user.title')?.value || ''),    // works BC setValue is called before...
-        map((value: string | User): string => (typeof value === 'string' ? value : (<any>value)['title']) || '' ),
-        map((value) => this._filter(value, 'title'))
-      );
+        distinctUntilChanged(),
+        tap((name) => this.form.get('user.title')?.setValue(name))
+    ).subscribe(data => console.log(`form updted for path 'user.name' with `, data));
+    
+    (this.form.get('user.title') || {} as AbstractControl).valueChanges
+      .pipe(
+        distinctUntilChanged(),
+        tap((title) => this.form.get('user.name')?.setValue(title))
+      ).subscribe(data => console.log(`form updted for path 'user.title' with `, data));
+
+    (this.form.get('user') || {} as AbstractControl).valueChanges.subscribe(data => console.log(`form updted for path 'user' with `, data));
   }
 
   ngAfterViewInit() {
