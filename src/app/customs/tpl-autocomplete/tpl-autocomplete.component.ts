@@ -1,6 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   Inject,
@@ -48,7 +49,7 @@ import {
   },
 })
 export class TplAutocompleteComponent<T>
-  implements MatFormFieldControl<T>, ControlValueAccessor, OnInit
+  implements MatFormFieldControl<T>, ControlValueAccessor, OnInit, AfterViewInit
 {
   static nextId = 0;
   @ViewChild('autoInput') autoInput: HTMLInputElement;
@@ -139,7 +140,8 @@ export class TplAutocompleteComponent<T>
   }
   set value(value: T | null) {
     console.log(`value (set) from ctr id ${this.id}`, value);
-    this.myControl.setValue({[this.filterField] : value});    // javascript way of getting a genereic field name
+    this.currentObject = value as T;
+    this.myControl.setValue( value);  
     this.stateChanges.next();
   }
 
@@ -233,6 +235,7 @@ export class TplAutocompleteComponent<T>
   }
 
   displayFn(data?: T): string {
+    console.log('display fn data', data);
     return (data && (<any>data)[this.filterField]) || '';
   }
 
