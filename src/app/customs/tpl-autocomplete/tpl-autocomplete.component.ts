@@ -1,41 +1,11 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Inject,
-  Input,
-  OnInit,
-  Optional,
-  Self,
-  ViewChild,
-} from '@angular/core';
-import {
-  ControlValueAccessor,
-  FormControl,
-  NgControl,
-  Validators,
-} from '@angular/forms';
-import {
-  MatAutocompleteSelectedEvent,
-  MatAutocompleteTrigger,
-  _MatAutocompleteBase,
-} from '@angular/material/autocomplete';
+import { AfterViewInit,  Component,  ElementRef,  Inject,  Input,  OnInit,  Optional,  Self,  ViewChild } from '@angular/core';
+import { ControlValueAccessor, FormControl, NgControl, Validators, } from '@angular/forms';
+import { MatAutocompleteSelectedEvent,  MatAutocompleteTrigger,  _MatAutocompleteBase,} from '@angular/material/autocomplete';
 import { _MatOptionBase } from '@angular/material/core';
-import {
-  MatFormField,
-  MatFormFieldControl,
-  MAT_FORM_FIELD,
-} from '@angular/material/form-field';
-import {
-  filter,
-  map,
-  Observable,
-  startWith,
-  Subject,
-  Subscription,
-} from 'rxjs';
+import { MatFormField, MatFormFieldControl, MAT_FORM_FIELD, } from '@angular/material/form-field';
+import { filter,  map,  Observable,  startWith,  Subject,  Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tpl-autocomplete',
@@ -55,14 +25,17 @@ export class TplAutocompleteComponent<T>
   @ViewChild('autoInput') autoInput: HTMLInputElement;
   @ViewChild('autoInput', { read: MatAutocompleteTrigger, static: false })
   autoTrigger: MatAutocompleteTrigger;
+  
+  myControl = new FormControl();  // form control as this custom holds only one control. shoudl be any Form this custom control should represent ( by properties )
 
-  myControl = new FormControl();
+  /**
+   * specific object ( inner control ) that holds current option's Real Object (as T)
+   */
   get currentObject(): T {
     return this._currentObject;
   }
   set currentObject(value: T) {
     this._currentObject = value;
-    console.log(`set current Object with value `, value);
     if (value && this.autoTrigger) {
       this.autoTrigger.writeValue(value);
     }
@@ -73,6 +46,7 @@ export class TplAutocompleteComponent<T>
   filteredOptions: Observable<any[]>;
 
   //MatFormFieldControl implementation properties
+  //#region MatFormFieldControl implementation
   stateChanges = new Subject<void>();
   id = `tpl-autocomplete-${TplAutocompleteComponent.nextId++}`;
   focused = false;
@@ -113,7 +87,7 @@ export class TplAutocompleteComponent<T>
   }
   set required(value: BooleanInput) {
     this._required = coerceBooleanProperty(value);
-    this._setValidation(this.required);
+    this.setValidation(this.required);
     this.stateChanges.next();
   }
   private _required = false;
@@ -128,10 +102,14 @@ export class TplAutocompleteComponent<T>
     this.stateChanges.next();
   }
   private _disabled = false;
-
+//#endregion
+  
+  /**
+   * important from MatFormFieldControl. Out of "region"
+   * allows this Forms' controls to update parents' Form group and Form value...
+   */
   @Input()
   get value(): T | null {
-    console.log(`value (get) from ctr id ${this.id}`, this.myControl.value);
     if (this.myControl.valid) {
       (<any>this.currentObject)[this.filterField] = this.myControl.value;
       return this.currentObject;
@@ -139,7 +117,6 @@ export class TplAutocompleteComponent<T>
     return null;
   }
   set value(value: T | null) {
-    console.log(`value (set) from ctr id ${this.id}`, value);
     this.currentObject = value as T;
     this.myControl.setValue( value);  
     this.stateChanges.next();
@@ -180,19 +157,18 @@ export class TplAutocompleteComponent<T>
       });
   }
 
-  //#region ControlValueAccessor
-  onChange = (_: any) => {};
-  onTouched = () => {};
-
   /**
+   * Important part of ControlValueAccessor: out of "region".
    * writeValue: method called by the Forms module to write a value into a form control...
    * So this means write From Higher order FormGroup...
    */
   writeValue(obj: T): void {
-    console.log(`writeValue from ctr id ${this.id}`, obj);
-    // this.currentObject = obj;
     this.value = obj;
   }
+  
+  //#region ControlValueAccessor
+  onChange = (_: any) => {};
+  onTouched = () => {};  
 
   registerOnChange(fn: any): void {
     this.onChange = fn;
@@ -202,6 +178,7 @@ export class TplAutocompleteComponent<T>
   }
   //#endregion
 
+  //#region MatFormFieldControl methods
   setDescribedByIds(ids: string[]): void {
     const controlElement =
       this._elementRef.nativeElement.querySelector('input')!;
@@ -211,21 +188,9 @@ export class TplAutocompleteComponent<T>
   onContainerClick(event: MouseEvent): void {
     this._focusMonitor.focusVia(this.autoInput, 'program');
   }
+  //#endregion
 
-  onFocusIn(event: FocusEvent) {
-    if (!this.focused) {
-      this.markAsTouched();
-    }
-  }
-
-  onFocusOut(event: FocusEvent) {
-    if (
-      !this._elementRef.nativeElement.contains(event.relatedTarget as Element)
-    ) {
-      this.focused = false;
-    }
-  }
-
+  //#region  actions or events handlers 
   onSelection(event: MatAutocompleteSelectedEvent) {
     const value = event.option.value;
     this.currentObject = value;
@@ -235,19 +200,11 @@ export class TplAutocompleteComponent<T>
   }
 
   displayFn(data?: T): string {
-    console.log('display fn data', data);
     return (data && (<any>data)[this.filterField]) || '';
   }
-
-  markAsTouched() {
-    if (!this.touched) {
-      this.onTouched();
-      this.touched = true;
-    }
-    this.stateChanges.next();
-  }
-
-  // THE one needed to be overriden in any directive
+//#endregion
+  
+  // _ THE ones needed to be overriden in any directive
   _filter(value: string): T[] {      
     const filtered =  this.options.filter((option) => {
       return (<any>option)[this.filterField]
@@ -256,29 +213,14 @@ export class TplAutocompleteComponent<T>
     });
 
     if (filtered.length === 0) {
-      const adding = this.createUnknownObject(value, true);  
+      const adding = this._createUnknownObject(value, true);  
       if (adding as T){ filtered.unshift(adding); }
     }
     
     return filtered;
   }
 
-  ngOnDestroy() {
-    this.autoTriggerSubscription.unsubscribe();
-    this.stateChanges.complete();
-    this._focusMonitor.stopMonitoring(this._elementRef);
-  }
-
-  private _setValidation(req: boolean) {
-    if (req === true) {
-      this.myControl.addValidators(Validators.required);
-    } else {
-      this.myControl.clearValidators();
-    }
-    this.myControl.updateValueAndValidity();
-  }
-
-  private createUnknownObject(value: string, resetId: boolean = false): T {
+  _createUnknownObject(value: string, resetId: boolean = false): T {
     const locVar = <any>this.currentObject || {} as T;
 
     if (locVar.id === -1 || resetId) {
@@ -288,4 +230,27 @@ export class TplAutocompleteComponent<T>
 
     return locVar;
   }
+
+  ngOnDestroy() {
+    this.autoTriggerSubscription.unsubscribe();
+    this.stateChanges.complete();
+    this._focusMonitor.stopMonitoring(this._elementRef);
+  }
+
+  private markAsTouched() {
+    if (!this.touched) {
+      this.onTouched();
+      this.touched = true;
+    }
+    this.stateChanges.next();
+  }
+
+  private setValidation(req: boolean) {
+    if (req === true) {
+      this.myControl.addValidators(Validators.required);
+    } else {
+      this.myControl.clearValidators();
+    }
+    this.myControl.updateValueAndValidity();
+  }  
 }
