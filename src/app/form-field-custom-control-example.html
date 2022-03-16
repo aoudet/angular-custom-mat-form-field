@@ -5,8 +5,8 @@
     <mat-icon matSuffix>phone</mat-icon>
     <mat-hint>Include area code</mat-hint>
   </mat-form-field>
-
   <br>
+
   <div formGroupName="user"  
       style="border: 1px black dotted; padding: 1em">
     <mat-form-field appearance="fill">
@@ -29,36 +29,10 @@
           required
         ></app-tpl-autocomplete>
       </mat-form-field>
-  </div>
-
-    <div formGroupName="user" style="border: 1px black solid; padding: 1em"  *ngIf="false">
-      <mat-form-field appearance="fill">
-        <mat-label>NAME searcher</mat-label>      
-        <input #autoInputName matInput type="text" placeholder="text is here" [matAutocomplete]="autoName"  formControlName="name" />
-      </mat-form-field>
-
-      <br /><br />
-      <mat-form-field appearance="fill">
-        <mat-label>TITLE searcher</mat-label>
-        <input #autoInputTitle matInput type="text" placeholder="text is here" [matAutocomplete]="autoTitle"  formControlName="title" />
-      </mat-form-field>      
   </div>  
+   
 </div>
+
 <br />
 <p>outside Form: {{form.value | json}}</p>
-
-
-<mat-autocomplete id='name' #autoName="matAutocomplete" (optionSelected)="onSelection($event)" [displayWith]="displayNameWith">
-  <mat-option *ngFor="let option of filteredNameOptions$ | async" [value]="option">
-    <strong>{{ option.name }}</strong> | {{ option.title }} ||
-    <span xx-small>{{ option.id }}</span>
-  </mat-option>
-</mat-autocomplete>
-
-<mat-autocomplete id='title' #autoTitle="matAutocomplete" (optionSelected)="onSelection($event)"   [displayWith]="displayTitleWith">
-  <mat-option *ngFor="let option of filteredTitleOptions$ | async" [value]="option">
-    {{ option.name }} | <strong>{{ option.title }}</strong> ||
-    <span xx-small>{{ option.id }}</span>
-  </mat-option>
-</mat-autocomplete>
 
